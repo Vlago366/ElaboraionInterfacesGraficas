@@ -4,13 +4,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.media.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.util.List;
 
 public class BibliotecaMultimedia extends Application {
 
@@ -42,15 +39,15 @@ public class BibliotecaMultimedia extends Application {
         // Panel lateral izquierdo (Editor de video)
         VBox editorVideo = new VBox();
         editorVideo.getChildren().add(new Label("Editor de Video"));
-        editorVideo.setStyle("-fx-background-color: #ececec;");
+        editorVideo.setStyle("-fx-background-color: hsl(0, 0.00%, 39.20%);");
         editorVideo.setPrefWidth(150);
 
         // Panel lateral derecho (Biblioteca)
         VBox biblioteca = new VBox();
         biblioteca.getChildren().add(new Label("Biblioteca"));
-        biblioteca.setStyle("-fx-background-color: #ececec;");
+        biblioteca.setStyle("-fx-background-color:hsl(0, 0.00%, 39.20%);");
         biblioteca.setPrefWidth(150);
-        
+
         // Reproductor central
         StackPane reproductor = new StackPane();
         reproductor.setStyle("-fx-background-color: #000;");
@@ -70,26 +67,28 @@ public class BibliotecaMultimedia extends Application {
 
         HBox controles = new HBox(10, btnPlay, btnPause, btnStop, barraProgreso, tiempoReproduccion);
         controles.setAlignment(Pos.CENTER);
-        controles.setStyle("-fx-padding: 10px; -fx-background-color: #dcdcdc;");
+        controles.setStyle("-fx-padding: 10px; -fx-background-color:rgb(189, 58, 58);");
 
         btnPlay.setOnAction(e -> {
-            if (mediaPlayer != null) mediaPlayer.play();
+            if (mediaPlayer != null)
+                mediaPlayer.play();
         });
 
         btnPause.setOnAction(e -> {
-            if (mediaPlayer != null) mediaPlayer.pause();
+            if (mediaPlayer != null)
+                mediaPlayer.pause();
         });
 
         btnStop.setOnAction(e -> {
-            if (mediaPlayer != null) mediaPlayer.stop();
+            if (mediaPlayer != null)
+                mediaPlayer.stop();
         });
 
         // Cargar archivo desde la biblioteca
         biblioteca.setOnMouseClicked(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Archivos Multimedia", "*.mp3", "*.mp4", "*.wav")
-            );
+                    new FileChooser.ExtensionFilter("Archivos Multimedia", "*.mp3", "*.mp4", "*.wav"));
             File archivo = fileChooser.showOpenDialog(primaryStage);
             if (archivo != null) {
                 cargarArchivo(archivo, reproductor);
@@ -104,7 +103,12 @@ public class BibliotecaMultimedia extends Application {
         root.setCenter(reproductor);
         root.setBottom(controles);
 
+        // Crear la escena
         Scene scene = new Scene(root, 800, 600);
+
+        // Agregar el CSS a la escena
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -125,8 +129,7 @@ public class BibliotecaMultimedia extends Application {
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
             barraProgreso.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
             tiempoReproduccion.setText(
-                formatTime(newTime) + " / " + formatTime(mediaPlayer.getTotalDuration())
-            );
+                    formatTime(newTime) + " / " + formatTime(mediaPlayer.getTotalDuration()));
         });
 
         barraProgreso.setOnMouseClicked(e -> {
@@ -135,7 +138,7 @@ public class BibliotecaMultimedia extends Application {
                 mediaPlayer.seek(javafx.util.Duration.seconds(newTime));
             }
         });
-        
+
         // Mostrar título del archivo
         tituloArchivo.setText("Reproduciendo: " + archivo.getName());
 
