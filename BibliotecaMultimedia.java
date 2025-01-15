@@ -39,13 +39,13 @@ public class BibliotecaMultimedia extends Application {
         // Panel lateral izquierdo (Editor de video)
         VBox editorVideo = new VBox();
         editorVideo.getChildren().add(new Label("Editor de Video"));
-        editorVideo.setStyle("-fx-background-color: hsl(0, 0.00%, 39.20%);");
+        editorVideo.setStyle("-fx-background-color: hsl(0, 0.00%, 100.00%);");
         editorVideo.setPrefWidth(150);
 
         // Panel lateral derecho (Biblioteca)
         VBox biblioteca = new VBox();
         biblioteca.getChildren().add(new Label("Biblioteca"));
-        biblioteca.setStyle("-fx-background-color:hsl(0, 0.00%, 39.20%);");
+        biblioteca.setStyle("-fx-background-color:hsl(0, 0.00%, 100.00%);");
         biblioteca.setPrefWidth(150);
 
         // Reproductor central
@@ -65,7 +65,7 @@ public class BibliotecaMultimedia extends Application {
 
         tiempoReproduccion = new Label("0:00 / 0:00");
 
-        HBox controles = new HBox(10, btnPlay, btnPause, btnStop, barraProgreso, tiempoReproduccion);
+        HBox controles = new HBox(50, btnPlay, btnPause, btnStop, barraProgreso, tiempoReproduccion);
         controles.setAlignment(Pos.CENTER);
         controles.setStyle("-fx-padding: 10px; -fx-background-color:rgb(189, 58, 58);");
 
@@ -84,16 +84,32 @@ public class BibliotecaMultimedia extends Application {
                 mediaPlayer.stop();
         });
 
-        // Cargar archivo desde la biblioteca
         biblioteca.setOnMouseClicked(e -> {
+            // Directorio de la carpeta 'Reproduccion' dentro del proyecto
+            File carpetaReproduccion = new File("Reproduccion");
+            
+            // Verificar si la carpeta existe
+            if (!carpetaReproduccion.exists()) {
+                System.out.println("La carpeta 'Reproduccion' no se encuentra.");
+                return;
+            }
+        
+            // Configurar el FileChooser para abrir la carpeta 'Reproduccion'
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("Archivos Multimedia", "*.mp3", "*.mp4", "*.wav"));
+            
+            // Establecer la carpeta inicial para abrir el diálogo
+            fileChooser.setInitialDirectory(carpetaReproduccion);
+        
+            // Mostrar el diálogo de apertura de archivo
             File archivo = fileChooser.showOpenDialog(primaryStage);
+            
             if (archivo != null) {
                 cargarArchivo(archivo, reproductor);
             }
         });
+        
 
         // Diseño principal
         BorderPane root = new BorderPane();
@@ -119,38 +135,49 @@ public class BibliotecaMultimedia extends Application {
             mediaPlayer.stop();
             mediaPlayer.dispose();
         }
-
+    
         // Configurar Media y MediaPlayer
         Media media = new Media(archivo.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-
+    
+        // Verificar si el MediaPlayer se ha inicializado correctamente
+        if (mediaPlayer == null) {
+            System.out.println("Error al cargar el video.");
+            return;
+        }
+    
         barraProgreso.setValue(0);
-
+    
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
             barraProgreso.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds());
             tiempoReproduccion.setText(
-                    formatTime(newTime) + " / " + formatTime(mediaPlayer.getTotalDuration()));
+                formatTime(newTime) + " / " + formatTime(mediaPlayer.getTotalDuration())
+            );
         });
-
+    
         barraProgreso.setOnMouseClicked(e -> {
             if (mediaPlayer != null) {
                 double newTime = barraProgreso.getValue() * mediaPlayer.getTotalDuration().toSeconds();
                 mediaPlayer.seek(javafx.util.Duration.seconds(newTime));
             }
         });
-
+    
         // Mostrar título del archivo
         tituloArchivo.setText("Reproduciendo: " + archivo.getName());
-
-        // Mostrar contenido multimedia
+    
+        // Mostrar contenido multimedia en MediaView
         MediaView mediaView = new MediaView(mediaPlayer);
         mediaView.setPreserveRatio(true);
         mediaView.setFitWidth(600);
         mediaView.setFitHeight(400);
-
+    
         reproductor.getChildren().clear();
         reproductor.getChildren().add(mediaView);
+    
+        // Reproducir el video
+        mediaPlayer.play();
     }
+    
 
     private String formatTime(javafx.util.Duration duration) {
         int minutes = (int) duration.toMinutes();
