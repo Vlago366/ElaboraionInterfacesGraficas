@@ -8,6 +8,8 @@ import javafx.geometry.Pos;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.net.URL;
+import java.util.List;
 
 public class BibliotecaMultimedia extends Application {
 
@@ -48,6 +50,13 @@ public class BibliotecaMultimedia extends Application {
         biblioteca.setStyle("-fx-background-color:hsl(0, 0.00%, 100.00%);");
         biblioteca.setPrefWidth(150);
 
+        // ListView para mostrar los archivos multimedia
+        ListView<String> listaArchivos = new ListView<>();
+        listaArchivos.setMaxHeight(200);
+
+        // Cargar los archivos de la carpeta "Reproduccion"
+        cargarArchivosDeBiblioteca(listaArchivos);
+
         // Reproductor central
         StackPane reproductor = new StackPane();
         reproductor.setStyle("-fx-background-color: #000;");
@@ -84,32 +93,14 @@ public class BibliotecaMultimedia extends Application {
                 mediaPlayer.stop();
         });
 
-        biblioteca.setOnMouseClicked(e -> {
-            // Directorio de la carpeta 'Reproduccion' dentro del proyecto
-            File carpetaReproduccion = new File("Reproduccion");
-            
-            // Verificar si la carpeta existe
-            if (!carpetaReproduccion.exists()) {
-                System.out.println("La carpeta 'Reproduccion' no se encuentra.");
-                return;
-            }
-        
-            // Configurar el FileChooser para abrir la carpeta 'Reproduccion'
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Archivos Multimedia", "*.mp3", "*.mp4", "*.wav"));
-            
-            // Establecer la carpeta inicial para abrir el diálogo
-            fileChooser.setInitialDirectory(carpetaReproduccion);
-        
-            // Mostrar el diálogo de apertura de archivo
-            File archivo = fileChooser.showOpenDialog(primaryStage);
-            
-            if (archivo != null) {
+        // Acción al seleccionar un archivo de la biblioteca
+        listaArchivos.setOnMouseClicked(e -> {
+            String archivoSeleccionado = listaArchivos.getSelectionModel().getSelectedItem();
+            if (archivoSeleccionado != null) {
+                File archivo = new File("Reproduccion", archivoSeleccionado);
                 cargarArchivo(archivo, reproductor);
             }
         });
-        
 
         // Diseño principal
         BorderPane root = new BorderPane();
@@ -123,7 +114,13 @@ public class BibliotecaMultimedia extends Application {
         Scene scene = new Scene(root, 800, 600);
 
         // Agregar el CSS a la escena
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        URL cssURL = getClass().getResource("style.css");
+        if (cssURL == null) {
+            System.out.println("No se encontró el archivo style.css.");
+        } else {
+            scene.getStylesheets().add(cssURL.toExternalForm());
+        }
+
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -177,7 +174,25 @@ public class BibliotecaMultimedia extends Application {
         // Reproducir el video
         mediaPlayer.play();
     }
-    
+
+    private void cargarArchivosDeBiblioteca(ListView<String> listaArchivos) {
+        // Directorio de la carpeta 'Reproduccion'
+        File carpetaReproduccion = new File("reproduccion");
+        
+        // Verificar si la carpeta existe
+        if (!carpetaReproduccion.exists()) {
+            System.out.println("La carpeta 'Reproduccion' no se encuentra.");
+            return;
+        }
+
+        // Listar los archivos multimedia en la carpeta 'Reproduccion'
+        File[] archivos = carpetaReproduccion.listFiles((dir, name) -> name.endsWith(".mp4") || name.endsWith(".mp3") || name.endsWith(".wav"));
+        if (archivos != null) {
+            for (File archivo : archivos) {
+                listaArchivos.getItems().add(archivo.getName());
+            }
+        }
+    }
 
     private String formatTime(javafx.util.Duration duration) {
         int minutes = (int) duration.toMinutes();

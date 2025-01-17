@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.media.MediaView?>
+
+<VBox xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" prefWidth="800" prefHeight="600">
+    <!-- Menú superior -->
+    <children>
+        <MenuBar>
+            <menus>
+                <Menu text="Archivo">
+                    <items>
+                        <MenuItem text="Abrir..." />
+                        <MenuItem text="Salir" />
+                    </items>
+                </Menu>
+                <Menu text="Biblioteca" />
+                <Menu text="Ver" />
+                <Menu text="Acerca" />
+            </menus>
+        </MenuBar>
+
+        <!-- Título del archivo -->
+        <Label text="Seleccione un archivo para reproducir" />
+
+        <!-- Contenido principal -->
+        <BorderPane VBox.vgrow="ALWAYS">
+            <!-- Panel izquierdo: Editor de vídeo -->
+            <left>
+                <VBox prefWidth="150" id="editor-video">
+                    <children>
+                        <Label text="Editor de Video" alignment="CENTER" />
+                    </children>
+                </VBox>
+            </left>
+
+            <!-- Panel central: Reproductor multimedia -->
+            <center>
+                <StackPane id="reproductor-central">
+                    <children>
+                        <MediaView fx:id="mediaView" fitWidth="600" fitHeight="400" preserveRatio="true" />
+                    </children>
+                </StackPane>
+            </center>
+
+            <!-- Panel derecho: Biblioteca -->
+            <right>
+                <VBox prefWidth="150" id="biblioteca">
+                    <children>
+                        <Label text="Biblioteca" alignment="CENTER" />
+                    </children>
+                </VBox>
+            </right>
+
+            <!-- Controles inferiores -->
+            <bottom>
+                <HBox spacing="10" alignment="CENTER" id="controles-inferiores">
+                    <children>
+                        <Button text="Play" />
+                        <Button text="Pause" />
+                        <Button text="Stop" />
+                        <Slider fx:id="barraProgreso" min="0" max="1" value="0" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="tiempoReproduccion" text="0:00 / 0:00" />
+                    </children>
+                </HBox>
+            </bottom>
+        </BorderPane>
+    </children>
+</VBox>

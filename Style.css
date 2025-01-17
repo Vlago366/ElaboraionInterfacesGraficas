@@ -1,0 +1,89 @@
+/* Estilos para Biblioteca Multimedia */
+
+/* Fondo general */
+.root {
+    -fx-background-color: #f4f4f4;
+}
+
+/* Barra de menú */
+.menu-bar {
+    -fx-background-color: #817e7e;
+    -fx-text-fill: white;
+}
+.menu {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+.menu-item {
+    -fx-text-fill: white;
+}
+
+/* Título del archivo */
+.label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* Panel de edición */
+.editor-video {
+    -fx-background-color: #ececec;  /* RGB para gris claro */
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+}
+.editor-video .button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+.editor-video .button:hover {
+    -fx-background-color: #005fa3;
+}
+
+/* Panel de biblioteca */
+.biblioteca {
+    -fx-background-color: #ececec;  /* RGB para gris claro */
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+}
+.biblioteca .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-padding: 5px;
+}
+
+/* Controles inferiores */
+.hbox {
+    -fx-background-color: #dcdcdc;  /* RGB para gris más oscuro */
+    -fx-padding: 10px;
+}
+.hbox .button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+.hbox .button:hover {
+    -fx-background-color: #005fa3;
+}
+.slider {
+    -fx-padding: 5px;
+}
+
+/* Reproductor central */
+.stack-pane {
+    -fx-background-color: black;
+}
+
+/* Etiquetas de tiempo */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
